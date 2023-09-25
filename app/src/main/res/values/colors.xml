@@ -6,4 +6,8 @@
     <color name="ic_color_checked">#767676</color>
     <color name="ic_bg_color_checked">#1A1A1A</color>
     <color name="ic_bg_color">#2C2C2C</color>
+    <color name="art_container_color">#141414</color>
+    <color name="art_title">#E7E7E7</color>
+    <color name="art_author">#939393</color>
+    <color name="action_button">#D9232323</color>
 </resources>
