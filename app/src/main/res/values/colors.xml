@@ -10,4 +10,6 @@
     <color name="art_title">#E7E7E7</color>
     <color name="art_author">#939393</color>
     <color name="action_button">#D9232323</color>
+    <color name="text_color">#5f00ee</color>
+    <color name="background">#33284E</color>
 </resources>

@@ -5,4 +5,6 @@
     <string name="art_info">This painting depicts Monet\'s first wife, Camille, outside on a snowy day passing by the French doors of their home at Argenteuil. \n\nHer face is rendered in a radically bold Impressionist technique of mere daubs of paint quickly applied, just as the snow and trees are defined by broad, broken strokes of pure white and green.</string>
     <string name="art_author">Claude Monet</string>
     <string name="art_title">The Red Kerchief</string>
+    <string name="app_title">Hello application</string>
+    <string name="user_name">Hello my name is Farkhat</string>
 </resources>
