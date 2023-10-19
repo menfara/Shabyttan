@@ -2,9 +2,13 @@
     <string name="app_name">Shabyttan</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="art_info">This painting depicts Monet\'s first wife, Camille, outside on a snowy day passing by the French doors of their home at Argenteuil. \n\nHer face is rendered in a radically bold Impressionist technique of mere daubs of paint quickly applied, just as the snow and trees are defined by broad, broken strokes of pure white and green.</string>
+    <string name="art_info">This painting depicts Monet\'s first wife, Camille, outside on a snowy day passing by the French doors of their home at Argenteuil. \n\nHer face is rendered in a radically bold Impressionist technique of mere daubs of paint quickly applied, just as the snow and trees are defined by broad, broken strokes of pure white and green. This painting depicts Monet\'s first wife, Camille, outside on a snowy day passing by the French doors of their home at Argenteuil. \n\nHer face is rendered in a radically bold Impressionist technique of mere daubs of paint quickly applied, just as the snow and trees are defined by broad, broken strokes of pure white and green.</string>
     <string name="art_author">Claude Monet</string>
     <string name="art_title">The Red Kerchief</string>
     <string name="app_title">Hello application</string>
     <string name="user_name">Hello my name is Farkhat</string>
+    <string name="dummy_text">Van Gogh painted this self-portrait in the winter of 1887–88, when he had been in Paris for almost two years. It is clear from the work that he had studied the technique of the Pointillists and applied it in his own, original way. He placed the short stripes of paint in different directions. Where they follow the outline of his head, they form a kind of halo.\n\nThe painting is also one of Van Gogh’s boldest colour experiments in Paris. He placed complementary colours alongside one another using long brushstrokes: blue and orange in the background, and red and green in the beard and eyes. The colours intensify one another. The red pigment has faded, so the purple strokes are now blue, which means the contrast with the yellow is less powerful.</string>
+    <string name="hint_search">Search artworks</string>
+    <string name="recommended">Recommended for you</string>
+    <string name="history">History</string>
 </resources>

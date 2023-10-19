@@ -3,7 +3,33 @@
     <style name="Base.Theme.Shabyttan" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+<!--        <item name="android:navigationBarColor">@color/ic_bg_color_checked</item>-->
+        <item name="android:statusBarColor">
+            @color/ic_bg_color_checked
+        </item>
+        <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
+
     </style>
 
     <style name="Theme.Shabyttan" parent="Base.Theme.Shabyttan" />
+
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorOnPrimary">@android:color/transparent</item>
+    </style>
+
+    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+        <item name="shapeAppearanceOverlay">@style/FabShapeStyle1</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+
+    <style name="FabShapeStyle1" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
