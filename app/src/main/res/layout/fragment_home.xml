@@ -9,7 +9,7 @@
     tools:context=".fragments.HomeFragment">
 
     <ImageView
-        android:id="@+id/artwork_image"
+        android:id="@+id/art_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
@@ -31,9 +31,9 @@
         android:src="@drawable/ic_heart"
         app:fabCustomSize="50dp"
 
-        app:layout_constraintBottom_toBottomOf="@id/artwork_image"
-        app:layout_constraintEnd_toEndOf="@id/artwork_image"
-        app:layout_constraintTop_toBottomOf="@id/artwork_image"
+        app:layout_constraintBottom_toBottomOf="@id/art_image"
+        app:layout_constraintEnd_toEndOf="@id/art_image"
+        app:layout_constraintTop_toBottomOf="@id/art_image"
         app:tint="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,9 +45,9 @@
         android:src="@drawable/ic_share"
         app:fabCustomSize="50dp"
 
-        app:layout_constraintBottom_toBottomOf="@id/artwork_image"
-        app:layout_constraintEnd_toEndOf="@id/artwork_image"
-        app:layout_constraintTop_toBottomOf="@id/artwork_image"
+        app:layout_constraintBottom_toBottomOf="@id/art_image"
+        app:layout_constraintEnd_toEndOf="@id/art_image"
+        app:layout_constraintTop_toBottomOf="@id/art_image"
         app:tint="@android:color/white" />
 
 
@@ -65,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/artwork_image"
+        app:layout_constraintTop_toBottomOf="@id/art_image"
 
         >
 

@@ -1,6 +1,19 @@
 package com.example.shabyttan.models
 
 data class Data(
+    val title_in_original_language: String?,
+    val series: String?,
+    val series_in_original_language: String?,
+    val did_you_know: String?,
+    val description: String?,
+    val catalogue_raisonne: String?,
+    val legal_status: String?,
+    val accession_date: String?,
+    val sortable_date: Int?,
+    val date_text: String?,
+    val collapse_artists: Boolean?,
+
+
     val accession_number: String,
     val alternate_images: List<AlternateImage>,
     val artists_tags: List<String>,

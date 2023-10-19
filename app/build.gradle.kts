@@ -71,4 +71,14 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.5.3")
 
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.16.0")
+
+
+    // Shimmer
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+
 }

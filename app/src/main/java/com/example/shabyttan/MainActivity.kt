@@ -24,7 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var artworksViewModel: ArtworksViewModel
 
     private lateinit var binding: ActivityMainBinding
 

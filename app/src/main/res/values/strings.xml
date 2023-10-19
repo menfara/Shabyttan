@@ -11,4 +11,5 @@
     <string name="hint_search">Search artworks</string>
     <string name="recommended">Recommended for you</string>
     <string name="history">History</string>
+    <string name="fun_fact">Fun fact:</string>
 </resources>
