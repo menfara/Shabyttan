@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
             val data = artworkData.data[0]
             binding.apply {
                 artTitle.text = data.title
-                artAuthor.text = extractArtistName("Albert Pinkham Ryder (American, 1847–1917)")
+                artAuthor.text = extractArtistName(data.creators[0].description)
                 artDescription.text = data.description
                 artFunFact.text = HtmlCompat.fromHtml(
                     "Fun fact: ${data.did_you_know}",
