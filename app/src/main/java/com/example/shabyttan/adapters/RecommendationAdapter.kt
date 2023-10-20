@@ -1,10 +1,12 @@
 package com.example.shabyttan.adapters
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shabyttan.databinding.ItemRecommendedBinding
+import com.example.shabyttan.decorations.dp
 import com.example.shabyttan.models.Painting
 
 class RecommendationAdapter(private val images: List<Int>) :
@@ -22,6 +24,10 @@ class RecommendationAdapter(private val images: List<Int>) :
 
     override fun onBindViewHolder(holder: RecommendationViewHolder, position: Int) {
         holder.imageView.setImageResource(images[position])
+
+        val layoutParams = holder.itemView.layoutParams
+        val displayMetrics = Resources.getSystem().displayMetrics
+        layoutParams.width = displayMetrics.widthPixels - 16.dp - 16.dp
     }
 
     override fun getItemCount(): Int {

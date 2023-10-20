@@ -2,14 +2,19 @@ package com.example.shabyttan.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.text.HtmlCompat
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.shabyttan.R
 import com.example.shabyttan.api.ApiInterface
 import com.example.shabyttan.api.ApiUtilities
 import com.example.shabyttan.databinding.FragmentHome1Binding
@@ -24,28 +29,49 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHome1Binding? = null
     private val binding get() = _binding!!
     private lateinit var artworksViewModel: ArtworksViewModel
+    private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHome1Binding.inflate(inflater, container, false)
-        initializeViewModel()
-        setupObservers()
+//        initializeViewModel()
+//        setupObservers()
+
+        handler.postDelayed({
+            setFakeArtTitle()
+            removePlaceholders()
+        }, 1000)
 
 
         setupAppBarListener()
         return binding.root
     }
 
-    private fun stopShimmers() {
+    private fun setFakeArtTitle() {
         binding.apply {
-            shimmerDescription.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            shimmerDescription.requestLayout()
+            artImage.setImageResource(R.drawable.img_hero)
+            artTitle.text = requireActivity().getString(R.string.art_title)
+            artAuthor.text = requireActivity().getString(R.string.art_author)
+            artDescription.text = requireActivity().getString(R.string.art_info)
+            artFunFact.text = requireActivity().getString(R.string.fun_fact)
 
-            handleShimmerView(shimmerViewContainer)
-            handleShimmerView(shimmerTitle)
-            handleShimmerView(shimmerAuthor)
-            handleShimmerView(shimmerDescription)
+        }
+    }
+
+    private fun removePlaceholders() {
+        binding.apply {
+            artTitle.setBackgroundColor(Color.TRANSPARENT)
+            artAuthor.setBackgroundColor(Color.TRANSPARENT)
+            artDescription.setBackgroundColor(Color.TRANSPARENT)
+            val layoutParams = artAuthor.layoutParams as LinearLayout.LayoutParams
+            layoutParams.topMargin = 0
+            artAuthor.layoutParams = layoutParams
+
+            val layoutParams1 = artDescription.layoutParams as LinearLayout.LayoutParams
+            layoutParams1.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            artDescription.layoutParams = layoutParams1
 
         }
 
@@ -60,6 +86,7 @@ class HomeFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
         _binding = null
     }
@@ -88,7 +115,7 @@ class HomeFragment : Fragment() {
                     .load(data.images.web.url)
                     .timeout(60000)
                     .into(artImage)
-                stopShimmers()
+                removePlaceholders()
             }
         }
     }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="237dp"
+    android:background="@drawable/placeholder_image"
     android:backgroundTint="@android:color/transparent"
     app:cardCornerRadius="15dp"
     app:cardElevation="0dp">
@@ -11,8 +14,9 @@
     <ImageView
         android:id="@+id/image_view_recommended"
         android:layout_width="match_parent"
-        android:layout_height="237dp"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_recommended" />
+        tools:src="@drawable/img_recommended" />
 </androidx.cardview.widget.CardView>
+

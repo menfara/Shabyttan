@@ -7,20 +7,12 @@
     android:background="@color/art_container_color">
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
+    <ImageView
+        android:id="@+id/art_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:shimmer_auto_start="true">
-
-        <ImageView
-            android:id="@+id/art_image"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/placeholder_image"
-            android:scaleType="centerCrop" />
-    </com.facebook.shimmer.ShimmerFrameLayout>
+        android:layout_height="300dp"
+        android:background="@drawable/placeholder_image"
+        android:scaleType="centerCrop" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -65,69 +57,45 @@
             android:layout_marginTop="40dp"
             android:orientation="vertical">
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_title"
+
+            <TextView
+                android:id="@+id/art_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/placeholder_text"
-                tools:background="@android:color/transparent"
-                tools:shimmer_base_alpha="1">
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@color/art_title"
+                android:textSize="18sp"
+                tools:text="@string/art_title" />
 
-                <TextView
-                    android:id="@+id/art_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:textColor="@color/art_title"
-                    android:textSize="18sp"
-                    tools:text="@string/art_title" />
-            </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_author"
+            <TextView
+                android:id="@+id/art_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="20dp"
                 android:background="@drawable/placeholder_text"
-                tools:background="@android:color/transparent"
-                tools:shimmer_base_alpha="1">
-
-                <TextView
-                    android:id="@+id/art_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:textColor="@color/art_author"
-                    android:textSize="12sp"
-                    tools:text="@string/art_author" />
-            </com.facebook.shimmer.ShimmerFrameLayout>
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@color/art_author"
+                android:textSize="12sp"
+                tools:text="@string/art_author" />
 
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_description"
+            <TextView
+                android:id="@+id/art_description"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/placeholder_text"
-                tools:background="@android:color/transparent"
-                tools:shimmer_base_alpha="1">
-
-                <TextView
-                    android:id="@+id/art_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto"
-                    android:textColor="@color/art_title"
-
-                    tools:text="@string/art_info" />
-            </com.facebook.shimmer.ShimmerFrameLayout>
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/art_title" />
 
 
             <TextView
                 android:id="@+id/art_fun_fact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="18dp"
                 android:fontFamily="@font/roboto_italic"
                 android:textColor="@color/art_title"
 
