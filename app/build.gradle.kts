@@ -2,14 +2,15 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.shabyttan"
+    namespace = "farkhat.myrzabekov.shabyttan"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.shabyttan"
+        applicationId = "farkhat.myrzabekov.shabyttan"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
@@ -79,6 +80,21 @@ dependencies {
 
     // Shimmer
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+
+
+
+
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // Declare the dependency for the Cloud Firestore library
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
 
 }

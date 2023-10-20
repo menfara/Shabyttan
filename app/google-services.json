@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773170139556",
+    "project_id": "shabyttan-27fe8",
+    "storage_bucket": "shabyttan-27fe8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773170139556:android:1b4697a224586e13ef3131",
+        "android_client_info": {
+          "package_name": "farkhat.myrzabekov.shabyttan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3wqmbJn9Vvchtal9yc6mFwGFdMjpIOOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

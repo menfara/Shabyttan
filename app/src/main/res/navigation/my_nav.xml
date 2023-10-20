@@ -7,32 +7,24 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.shabyttan.fragments.HomeFragment"
+        android:name="farkhat.myrzabekov.shabyttan.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_profileFragment"
+            android:id="@+id/action_homeFragment2_to_profileFragment2"
             app:destination="@id/profileFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_searchFragment"
+            android:id="@+id/action_homeFragment2_to_searchFragment2"
             app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.shabyttan.fragments.ProfileFragment"
+        android:name="farkhat.myrzabekov.shabyttan.fragments.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
-        <action
-            android:id="@+id/action_profileFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.shabyttan.fragments.SearchFragment"
+        android:name="farkhat.myrzabekov.shabyttan.fragments.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_search" />
 </navigation>
