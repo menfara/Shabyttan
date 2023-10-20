@@ -102,7 +102,12 @@ class SearchFragment : Fragment() {
 
     private fun initRecommendedRecyclerView() {
         val imagesRecommendation =
-            listOf(R.drawable.recommended_1, R.drawable.recommended_2, R.drawable.recommended_3)
+            listOf(
+                R.drawable.recommended_1,
+                R.drawable.recommended_2,
+                R.drawable.recommended_3,
+                R.drawable.recommended_4
+            )
         val indicators =
             listOf(binding.indicator1, binding.indicator2, binding.indicator3, binding.indicator4)
         val layoutManagerRecommended =
