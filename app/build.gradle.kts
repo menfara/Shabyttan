@@ -82,10 +82,6 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 
-
-
-
-
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
@@ -95,6 +91,12 @@ dependencies {
 
     // Declare the dependency for the Cloud Firestore library
     implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Viewpager2
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    // lottie animations
+    implementation("com.airbnb.android:lottie:6.1.0")
 
 
 }

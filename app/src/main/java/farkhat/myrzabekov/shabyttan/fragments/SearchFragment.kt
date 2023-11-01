@@ -2,125 +2,114 @@ package farkhat.myrzabekov.shabyttan.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import farkhat.myrzabekov.shabyttan.adapters.PaintingAdapter
-import farkhat.myrzabekov.shabyttan.adapters.PaintingHorizontalAdapter
-import farkhat.myrzabekov.shabyttan.adapters.RecommendationAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
+import farkhat.myrzabekov.shabyttan.adapters.ArtistRecyclerViewAdapter
+import farkhat.myrzabekov.shabyttan.adapters.RecommendationRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.decorations.PageIndicator
 import farkhat.myrzabekov.shabyttan.decorations.HorizontalSpaceItemDecoration
 import farkhat.myrzabekov.shabyttan.decorations.StartLinearSnapHelper
 import farkhat.myrzabekov.shabyttan.decorations.dp
-import farkhat.myrzabekov.shabyttan.models.Painting
-import farkhat.myrzabekov.shabyttan.R
+import farkhat.myrzabekov.shabyttan.adapters.HistoryRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.databinding.FragmentSearchBinding
+import farkhat.myrzabekov.shabyttan.models.Artwork
+import farkhat.myrzabekov.shabyttan.viewmodels.FirestoreViewModel
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private val handler = Handler(Looper.getMainLooper())
-
+    private val viewModel: FirestoreViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        populateWithDummyData()
-        handler.postDelayed({
-            initHorizontalRecyclerView()
-            initHistoryRecyclerView()
-            initRecommendedRecyclerView()
-            initSearchInput()
-        }, 1000)
+
+
+        setupArtistRecyclerViewUI()
+        setupRecommendationRecyclerViewUI()
+        setupHistoryRecyclerViewUI()
+
+        loadPlaceholders()
+
+
+        viewModel.fetchArtworksForLastThreeDays()
+        viewModel.fetchRandomArtworks()
+        viewModel.fetchArtworksByAuthor("Claude Monet")
+
+
+        viewModel.artworksHistoryLiveData.observe(viewLifecycleOwner, ::updateHistoryRecyclerView)
+        viewModel.randomArtworksLiveData.observe(
+            viewLifecycleOwner,
+            ::updateRecommendationRecyclerView
+        )
+        viewModel.artworksByAuthorLiveData.observe(viewLifecycleOwner, ::updateArtistRecyclerView)
+
+
+        initSearchInput()
 
         return binding.root
     }
 
-    private fun populateWithDummyData() {
-        val dummyImages = List(5) { R.drawable.placeholder_image }
-        binding.horizontalRecyclerView.adapter = PaintingHorizontalAdapter(dummyImages)
-        binding.horizontalRecyclerView.addItemDecoration(HorizontalSpaceItemDecoration(15.dp)) // Adding space decoration here
-
-        val dummyPaintings = List(3) {
-            Painting(
-                R.drawable.placeholder_card_15,
-                "",
-                "",
-                ""
-            )
+    private fun loadPlaceholders() {
+        val emptyArtworkList = List(4) {
+            Artwork()
         }
-        binding.historyRecyclerView.adapter = PaintingAdapter(dummyPaintings)
 
-        val dummyRecommendations = List(5) { R.drawable.placeholder_image }
-        binding.recommendedRecyclerView.adapter = RecommendationAdapter(dummyRecommendations)
-        binding.recommendedRecyclerView.addItemDecoration(HorizontalSpaceItemDecoration(15.dp))
+        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(emptyArtworkList)
+        binding.recommendedRecyclerView.adapter =
+            RecommendationRecyclerViewAdapter(emptyArtworkList)
+        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(emptyArtworkList)
     }
 
-
-    private fun initHorizontalRecyclerView() {
-        val images = listOf(R.drawable.painting_1, R.drawable.painting_2, R.drawable.painting_3)
-        binding.horizontalRecyclerView.apply {
-            adapter = PaintingHorizontalAdapter(images)
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
+    private fun setupArtistRecyclerViewUI() {
+        binding.horizontalRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.horizontalRecyclerView.addItemDecoration(HorizontalSpaceItemDecoration(15.dp))
     }
 
-    private fun initHistoryRecyclerView() {
-        val paintings = listOf(
-            Painting(
-                R.drawable.history_1,
-                "Farmhouse in a Wheatfield",
-                "Vincent van Gogh",
-                "May 1888"
-            ),
-            Painting(
-                R.drawable.history_2,
-                "The Old Church Tower at Nuenen ('The Peasants' Churchyard')",
-                "Vincent van Gogh",
-                "May-June 1885"
-            ),
-            Painting(R.drawable.history_3, "The Pink Orchard", "Vincent van Gogh", "April 1888")
-        )
-
-        binding.historyRecyclerView.apply {
-            adapter = PaintingAdapter(paintings)
-            layoutManager = object : LinearLayoutManager(requireContext()) {
-                override fun canScrollVertically(): Boolean = false
-            }
-        }
-    }
-
-    private fun initRecommendedRecyclerView() {
-        val imagesRecommendation =
-            listOf(
-                R.drawable.recommended_1,
-                R.drawable.recommended_2,
-                R.drawable.recommended_3,
-                R.drawable.recommended_4
-            )
-        val indicators =
-            listOf(binding.indicator1, binding.indicator2, binding.indicator3, binding.indicator4)
+    private fun setupRecommendationRecyclerViewUI() {
         val layoutManagerRecommended =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recommendedRecyclerView.layoutManager = layoutManagerRecommended
+        binding.recommendedRecyclerView.addItemDecoration(HorizontalSpaceItemDecoration(15.dp))
+        val indicators =
+            listOf(binding.indicator1, binding.indicator2, binding.indicator3, binding.indicator4)
+        binding.recommendedRecyclerView.addOnScrollListener(
+            PageIndicator(
+                layoutManagerRecommended,
+                indicators
+            )
+        )
+        StartLinearSnapHelper().attachToRecyclerView(binding.recommendedRecyclerView)
+    }
 
-        binding.recommendedRecyclerView.apply {
-            adapter = RecommendationAdapter(imagesRecommendation)
-//            addItemDecoration(SpaceItemDecoration(15.dp))
-            layoutManager = layoutManagerRecommended
-            addOnScrollListener(PageIndicator(layoutManagerRecommended, indicators))
-
-            StartLinearSnapHelper().attachToRecyclerView(this)
+    private fun setupHistoryRecyclerViewUI() {
+        binding.historyRecyclerView.layoutManager = object : LinearLayoutManager(requireContext()) {
+            override fun canScrollVertically(): Boolean = false
         }
+    }
+
+    private fun updateArtistRecyclerView(artworks: List<Artwork>) {
+        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(artworks)
+    }
+
+    private fun updateRecommendationRecyclerView(artworks: List<Artwork>) {
+        binding.recommendedRecyclerView.adapter = RecommendationRecyclerViewAdapter(artworks)
+    }
+
+    private fun updateHistoryRecyclerView(artworks: List<Artwork>) {
+        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(artworks)
     }
 
     private fun initSearchInput() {
@@ -138,13 +127,25 @@ class SearchFragment : Fragment() {
     }
 
     private fun performSearch(query: String) {
-        // Your code to execute search, e.g., display search results or send a request to a server.
+        // Your code to execute search
     }
 
     override fun onDestroyView() {
-        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
         _binding = null
     }
 
+    private fun RecyclerView.setupRecyclerView(
+        adapter: RecyclerView.Adapter<*>,
+        layoutManager: RecyclerView.LayoutManager,
+        itemDecoration: RecyclerView.ItemDecoration? = null,
+        onScrollListener: RecyclerView.OnScrollListener? = null,
+        snapHelper: SnapHelper? = null
+    ) {
+        this.adapter = adapter
+        this.layoutManager = layoutManager
+        itemDecoration?.let { addItemDecoration(it) }
+        onScrollListener?.let { addOnScrollListener(it) }
+        snapHelper?.let { it.attachToRecyclerView(this) }
+    }
 }

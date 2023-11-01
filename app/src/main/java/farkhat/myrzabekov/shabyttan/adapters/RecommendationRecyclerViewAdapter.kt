@@ -3,16 +3,27 @@ package farkhat.myrzabekov.shabyttan.adapters
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import farkhat.myrzabekov.shabyttan.decorations.dp
 import farkhat.myrzabekov.shabyttan.databinding.ItemRecommendedBinding
+import farkhat.myrzabekov.shabyttan.models.Artwork
+import com.bumptech.glide.Glide
+import farkhat.myrzabekov.shabyttan.R
 
-class RecommendationAdapter(private val images: List<Int>) :
-    RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
+class RecommendationRecyclerViewAdapter(private val artworks: List<Artwork>) :
+    RecyclerView.Adapter<RecommendationRecyclerViewAdapter.RecommendationViewHolder>() {
+
     class RecommendationViewHolder(private val binding: ItemRecommendedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val imageView: ImageView = binding.imageViewRecommended
+
+        fun bind(artwork: Artwork) {
+            Glide.with(binding.imageViewRecommended.context)
+                .load(artwork.imageURL)
+                .placeholder(R.drawable.placeholder_image)
+                .into(binding.imageViewRecommended)
+
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationViewHolder {
@@ -22,15 +33,12 @@ class RecommendationAdapter(private val images: List<Int>) :
     }
 
     override fun onBindViewHolder(holder: RecommendationViewHolder, position: Int) {
-        holder.imageView.setImageResource(images[position])
+        holder.bind(artworks[position])
 
         val layoutParams = holder.itemView.layoutParams
         val displayMetrics = Resources.getSystem().displayMetrics
         layoutParams.width = displayMetrics.widthPixels - 16.dp - 16.dp
     }
 
-    override fun getItemCount(): Int {
-        return images.size
-    }
-
+    override fun getItemCount() = artworks.size
 }

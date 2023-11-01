@@ -3,20 +3,26 @@ package farkhat.myrzabekov.shabyttan.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import farkhat.myrzabekov.shabyttan.models.Painting
+import farkhat.myrzabekov.shabyttan.models.Artwork
 import farkhat.myrzabekov.shabyttan.databinding.ItemHistoryBinding
+import com.bumptech.glide.Glide
+import farkhat.myrzabekov.shabyttan.R
 
-class PaintingAdapter(private val paintings: List<Painting>) :
-    RecyclerView.Adapter<PaintingAdapter.PaintingViewHolder>() {
+class HistoryRecyclerViewAdapter(private val artworks: List<Artwork>) :
+    RecyclerView.Adapter<HistoryRecyclerViewAdapter.PaintingViewHolder>() {
 
     inner class PaintingViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(painting: Painting) {
+        fun bind(artwork: Artwork) {
             binding.apply {
-                title.text = painting.title
-                author.text = painting.author
-                date.text = painting.date
-                imageViewHistory.setImageResource(painting.imageResId)
+                title.text = artwork.title
+                author.text = artwork.author
+                date.text = artwork.date
+
+                Glide.with(imageViewHistory.context)
+                    .load(artwork.imageURL)
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(imageViewHistory)
             }
         }
     }
@@ -28,8 +34,8 @@ class PaintingAdapter(private val paintings: List<Painting>) :
     }
 
     override fun onBindViewHolder(holder: PaintingViewHolder, position: Int) {
-        holder.bind(paintings[position])
+        holder.bind(artworks[position])
     }
 
-    override fun getItemCount() = paintings.size
+    override fun getItemCount() = artworks.size
 }

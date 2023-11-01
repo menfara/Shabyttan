@@ -2,139 +2,134 @@ package farkhat.myrzabekov.shabyttan.fragments
 
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
-import farkhat.myrzabekov.shabyttan.R
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import farkhat.myrzabekov.shabyttan.databinding.DialogFullScreenImageBinding
-import farkhat.myrzabekov.shabyttan.databinding.FragmentHome1Binding
+import farkhat.myrzabekov.shabyttan.databinding.FragmentHomeBinding
 import farkhat.myrzabekov.shabyttan.viewmodels.FirestoreViewModel
 import kotlin.math.abs
 
 class HomeFragment : Fragment() {
-    private var _binding: FragmentHome1Binding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val handler = Handler(Looper.getMainLooper())
     private val viewModel: FirestoreViewModel by viewModels()
+    private var currentDrawable: Drawable? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHome1Binding.inflate(inflater, container, false)
-//        initializeViewModel()
-//        setupObservers()
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-
-        viewModel.fetchArtwork()
+        initializeUI()
         setupObservers()
-
-//        setFakeArtTitle()
-        setupAppBarListener()
-        setupImageClickToShowDialog()
-
-
-
 
         return binding.root
     }
 
+    private fun initializeUI() {
+        setupAppBarListener()
+        setupImageClickToShowDialog()
+        setupScrollViewListener()
+        setupToTopButton()
+
+        viewModel.fetchArtworkByDate()
+    }
+
+    private fun setupToTopButton() {
+        binding.toTopActionButton.setOnClickListener {
+            binding.nestedScrollView.scrollTo(0, 0)
+            binding.appbar.setExpanded(true, true)
+            it.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setupScrollViewListener() {
+        binding.nestedScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            handleScrollChange(scrollY, oldScrollY)
+        }
+    }
+
+    private fun handleScrollChange(scrollY: Int, oldScrollY: Int) {
+        if (scrollY > oldScrollY && !binding.toTopActionButton.isVisible) {
+            showToTopButton()
+        } else if (scrollY < oldScrollY && binding.toTopActionButton.isVisible) {
+            hideToTopButton()
+        }
+    }
+
+    private fun showToTopButton() {
+        binding.toTopActionButton.apply {
+            animate().alpha(1.0f).duration = 300
+            visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideToTopButton() {
+        binding.toTopActionButton.animate().alpha(0.0f).withEndAction {
+            binding.toTopActionButton.visibility = View.GONE
+        }.duration = 300
+    }
+
     private fun setupImageClickToShowDialog() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_full_screen_image)
-
         binding.artImage.setOnClickListener {
-            val dialog = Dialog(requireContext())
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            showDialogWithImage(currentDrawable)
+        }
+    }
 
+    private fun showDialogWithImage(drawable: Drawable?) {
+        val dialog = Dialog(requireContext()).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
             val dialogBinding = DialogFullScreenImageBinding.inflate(layoutInflater)
-            dialog.setContentView(dialogBinding.root)
-
-            dialogBinding.fullscreenImage.setImageDrawable(binding.artImage.drawable)
-
-            val window = dialog.window
+            setContentView(dialogBinding.root)
+            dialogBinding.fullscreenImage.apply {
+                setImageDrawable(drawable)
+                setOnClickListener { dismiss() }
+                adjustScaleType(drawable)
+            }
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
-
-            dialogBinding.fullscreenImage.setOnClickListener { dialog.dismiss() }
-
-            dialog.show()
         }
+        dialog.show()
     }
 
-    private fun setFakeArtTitle() {
-        handler.postDelayed({
-            binding.apply {
-                artImage.setImageResource(R.drawable.img_hero)
-                artTitle.text = requireActivity().getString(R.string.art_title)
-                artAuthor.text = requireActivity().getString(R.string.art_author)
-                artDescription.text = requireActivity().getString(R.string.art_info)
-                artFunFact.text = requireActivity().getString(R.string.fun_fact)
-
+    private fun ImageView.adjustScaleType(drawable: Drawable?) {
+        drawable?.let {
+            if (it.intrinsicHeight < it.intrinsicWidth) {
+                this.scaleType = ImageView.ScaleType.FIT_CENTER
+            } else {
+                this.scaleType = ImageView.ScaleType.CENTER_CROP
             }
-            removePlaceholders()
-        }, 1000)
-
-    }
-
-    private fun removePlaceholders() {
-        binding.apply {
-            artTitle.setBackgroundColor(Color.TRANSPARENT)
-            artAuthor.setBackgroundColor(Color.TRANSPARENT)
-            artDescription.setBackgroundColor(Color.TRANSPARENT)
-//            val layoutParams = artAuthor.layoutParams as LinearLayout.LayoutParams
-//            layoutParams.topMargin = 0
-//            artAuthor.layoutParams = layoutParams
-
-            val layoutParams1 = artDescription.layoutParams as LinearLayout.LayoutParams
-            layoutParams1.height = LinearLayout.LayoutParams.WRAP_CONTENT
-            artDescription.layoutParams = layoutParams1
-
         }
-
-    }
-
-
-    override fun onDestroyView() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupAppBarListener() {
         binding.appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val isCollapsed = abs(verticalOffset) - appBarLayout.totalScrollRange == 0
-            handleAppBarStateChange(isCollapsed)
+            handleAppBarStateChange(abs(verticalOffset) - appBarLayout.totalScrollRange == 0)
         }
     }
 
     private fun handleAppBarStateChange(isCollapsed: Boolean) {
-        if (isCollapsed) {
-            Log.d("MyTag", "Collapsed")
-            binding.apply {
-                shareActionButton.visibility = View.INVISIBLE
-                likeActionButton.visibility = View.INVISIBLE
-                artImage.visibility = View.INVISIBLE
-            }
-        } else {
-            Log.d("MyTag", "Expanded")
-            binding.apply {
-                shareActionButton.visibility = View.VISIBLE
-                likeActionButton.visibility = View.VISIBLE
-                artImage.visibility = View.VISIBLE
-            }
+        binding.apply {
+            val visibility = if (isCollapsed) View.INVISIBLE else View.VISIBLE
+            shareActionButton.visibility = visibility
+            likeActionButton.visibility = visibility
+            artImage.visibility = visibility
         }
     }
 
@@ -145,14 +140,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.artworkLiveData.observe(viewLifecycleOwner, Observer { artwork ->
+        viewModel.artworkLiveData.observe(viewLifecycleOwner) { artwork ->
             artwork?.let {
-                Log.d("MyTag", it.toString())
-                updateUI(it.title, it.author, it.description, it.funFact, it.imageUrl)
-            } ?: run {
-                // Handle the case when the artwork is null (maybe show an error message).
+                updateUI(it.title, it.author, it.description, it.funFact, it.imageURL)
             }
-        })
+        }
     }
 
     private fun updateUI(
@@ -167,13 +159,42 @@ class HomeFragment : Fragment() {
             artAuthor.text = extractArtistName(author ?: "")
             artDescription.text = description
             artFunFact.text = funFact
-
-            Glide.with(requireActivity())
-                .load(imageUrl)
-                .timeout(60000)
-                .into(artImage)
-
+            loadImage(imageUrl)
             removePlaceholders()
         }
+    }
+
+    private fun FragmentHomeBinding.loadImage(imageUrl: String?) {
+        Glide.with(requireActivity())
+            .load(imageUrl)
+            .timeout(60000)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    artImage.setImageDrawable(resource)
+                    currentDrawable = resource
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+    }
+
+    private fun removePlaceholders() {
+        binding.apply {
+            artTitle.setBackgroundColor(Color.TRANSPARENT)
+            artAuthor.setBackgroundColor(Color.TRANSPARENT)
+            artDescription.setBackgroundColor(Color.TRANSPARENT)
+
+            val layoutParams1 = artDescription.layoutParams as LinearLayout.LayoutParams
+            layoutParams1.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            artDescription.layoutParams = layoutParams1
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

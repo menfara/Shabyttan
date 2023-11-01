@@ -2,16 +2,24 @@ package farkhat.myrzabekov.shabyttan.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import farkhat.myrzabekov.shabyttan.databinding.ItemPaintingBinding
+import farkhat.myrzabekov.shabyttan.models.Artwork
+import com.bumptech.glide.Glide
+import farkhat.myrzabekov.shabyttan.R
 
-class PaintingHorizontalAdapter(private val images: List<Int>) :
-    RecyclerView.Adapter<PaintingHorizontalAdapter.ViewHolder>() {
+class ArtistRecyclerViewAdapter(private val artworks: List<Artwork>) :
+    RecyclerView.Adapter<ArtistRecyclerViewAdapter.ViewHolder>() {
 
     class ViewHolder(private val binding: ItemPaintingBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val imageView: ImageView = binding.imageView
+        fun bind(artwork: Artwork) {
+            Glide.with(binding.imageView.context)
+                .load(artwork.imageURL)
+                .placeholder(R.drawable.placeholder_image)
+                .into(binding.imageView)
+
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,11 +29,8 @@ class PaintingHorizontalAdapter(private val images: List<Int>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.imageView.setImageResource(images[position])
+        holder.bind(artworks[position])
     }
 
-    override fun getItemCount(): Int {
-        return images.size
-    }
+    override fun getItemCount() = artworks.size
 }
-
