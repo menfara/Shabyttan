@@ -24,11 +24,15 @@ class FirestoreViewModel : ViewModel() {
     val artworksByAuthorLiveData = MutableLiveData<List<Artwork>>()
     private val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale(LOCALE_LANGUAGE, LOCALE_COUNTRY))
 
+
+    private var cachedRandomArtworks: List<Artwork>? = null
+
     fun fetchArtworkById(id: String = "pTqDvyL326VJL2miVyp7") {
         repository.getArtworkById(id) { artwork ->
             artworkLiveData.postValue(artwork)
         }
     }
+
 
     fun fetchArtworksByAuthor(authorName: String) {
         repository.getArtworksByAuthor(authorName) { artworks ->
@@ -37,7 +41,8 @@ class FirestoreViewModel : ViewModel() {
     }
 
     fun fetchArtworkByDate(date: Date = Date()) {
-        val dateString = dateFormat.format(date)
+//        val dateString = dateFormat.format(date)
+        val dateString = dateFormat.format(getFixedDate())
         repository.getArtworkByDate(dateString) { artwork ->
             artworkLiveData.postValue(artwork)
         }
@@ -46,7 +51,8 @@ class FirestoreViewModel : ViewModel() {
     fun fetchArtworksForLastThreeDays() {
         val artworksList = mutableListOf<Artwork>()
         for (i in 0..2) {
-            val dateToFetch = subtractDays(Date(), i)
+            // Date()
+            val dateToFetch = subtractDays(getFixedDate(), i)
             val dateString = dateFormat.format(dateToFetch)
             repository.getArtworkByDate(dateString) { artwork ->
                 artwork?.let { artworksList.add(it) }
@@ -60,9 +66,22 @@ class FirestoreViewModel : ViewModel() {
         return Date(date.time - days * 24 * 60 * 60 * 1000)
     }
 
+    private fun getFixedDate(): Date {
+        val fixedDate = "31/10/2023"
+        return dateFormat.parse(fixedDate)!!
+    }
+
     fun fetchRandomArtworks() {
+        cachedRandomArtworks?.let {
+            if (it.isNotEmpty()) {
+                randomArtworksLiveData.postValue(it)
+                return
+            }
+        }
         repository.getRandomArtworks { artworks ->
-            randomArtworksLiveData.postValue(artworks.filterNotNull())
+            val filteredArtworks = artworks.filterNotNull()
+            cachedRandomArtworks = filteredArtworks
+            randomArtworksLiveData.postValue(filteredArtworks)
         }
     }
 }
