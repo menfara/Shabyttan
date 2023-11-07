@@ -12,7 +12,20 @@
           "package_name": "farkhat.myrzabekov.shabyttan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "773170139556-msd4u9s5n619arhhd6ajnmeq84h5atq0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "farkhat.myrzabekov.shabyttan",
+            "certificate_hash": "3835efe7e1a86b21fd0eb29f2518d1215a3f2e30"
+          }
+        },
+        {
+          "client_id": "773170139556-v372ipmae8t5vmutkfomlr05o67ql64b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC3wqmbJn9Vvchtal9yc6mFwGFdMjpIOOc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773170139556-v372ipmae8t5vmutkfomlr05o67ql64b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

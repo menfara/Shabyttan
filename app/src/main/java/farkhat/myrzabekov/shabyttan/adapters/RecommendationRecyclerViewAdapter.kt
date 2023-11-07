@@ -10,10 +10,13 @@ import farkhat.myrzabekov.shabyttan.models.Artwork
 import com.bumptech.glide.Glide
 import farkhat.myrzabekov.shabyttan.R
 
-class RecommendationRecyclerViewAdapter(private val artworks: List<Artwork>) :
+class RecommendationRecyclerViewAdapter(
+    private val artworks: List<Artwork>,
+    private val listener: OnArtworkClickListener
+) :
     RecyclerView.Adapter<RecommendationRecyclerViewAdapter.RecommendationViewHolder>() {
 
-    class RecommendationViewHolder(private val binding: ItemRecommendedBinding) :
+    inner class RecommendationViewHolder(private val binding: ItemRecommendedBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(artwork: Artwork) {
@@ -22,7 +25,9 @@ class RecommendationRecyclerViewAdapter(private val artworks: List<Artwork>) :
                 .placeholder(R.drawable.placeholder_image)
                 .into(binding.imageViewRecommended)
 
-
+            binding.root.setOnClickListener {
+                listener.onArtworkClick(artwork)
+            }
         }
     }
 

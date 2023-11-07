@@ -56,3 +56,16 @@ data class Data(
     val url: String,
     val wall_description: String
 )
+
+fun Data.toArtwork(): Artwork {
+    return Artwork(
+        id = this.athena_id,
+        author = this.creators.firstOrNull()?.description,
+        description = this.description,
+        funFact = this.fun_fact,
+        imageURL = this.images.web?.url,
+        title = this.title,
+        date = this.creation_date,
+        likesCount = 0
+    )
+}

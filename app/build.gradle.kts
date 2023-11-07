@@ -82,15 +82,29 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 
-    // Import the Firebase BoM
+
+
+
+
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
-
-    // When using the BoM, don't specify versions in Firebase dependencies
+    // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
 
-    // Declare the dependency for the Cloud Firestore library
+    // Firebase Firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Google Play Services Auth for Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+
+
+
+
 
     // Viewpager2
     implementation("androidx.viewpager2:viewpager2:1.0.0")

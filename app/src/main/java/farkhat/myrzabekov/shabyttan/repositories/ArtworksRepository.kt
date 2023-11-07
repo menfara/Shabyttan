@@ -26,16 +26,4 @@ class ArtworksRepository(private val apiInterface: ApiInterface) {
         }
     }
 
-    suspend fun getArtworkBySkip(skip: Int) {
-        try {
-            val response = apiInterface.getArtworkBySkip(skip)
-            if (response.isSuccessful) {
-                artworksLiveData.postValue(response.body())
-            } else {
-                Log.e("MyTag", "Request failed with code ${response.code()}")
-            }
-        } catch (e: Exception) {
-            Log.e("MyTag", "Error: ${e.message}", e)
-        }
-    }
 }

@@ -19,11 +19,12 @@ import farkhat.myrzabekov.shabyttan.decorations.HorizontalSpaceItemDecoration
 import farkhat.myrzabekov.shabyttan.decorations.StartLinearSnapHelper
 import farkhat.myrzabekov.shabyttan.decorations.dp
 import farkhat.myrzabekov.shabyttan.adapters.HistoryRecyclerViewAdapter
+import farkhat.myrzabekov.shabyttan.adapters.OnArtworkClickListener
 import farkhat.myrzabekov.shabyttan.databinding.FragmentSearchBinding
 import farkhat.myrzabekov.shabyttan.models.Artwork
 import farkhat.myrzabekov.shabyttan.viewmodels.FirestoreViewModel
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), OnArtworkClickListener {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -35,10 +36,6 @@ class SearchFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-
-        setupArtistRecyclerViewUI()
-        setupRecommendationRecyclerViewUI()
-        setupHistoryRecyclerViewUI()
 
         loadPlaceholders()
 
@@ -66,10 +63,14 @@ class SearchFragment : Fragment() {
             Artwork()
         }
 
-        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(emptyArtworkList)
+        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(emptyArtworkList, this)
         binding.recommendedRecyclerView.adapter =
-            RecommendationRecyclerViewAdapter(emptyArtworkList)
-        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(emptyArtworkList)
+            RecommendationRecyclerViewAdapter(emptyArtworkList, this)
+        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(emptyArtworkList, this)
+
+        setupArtistRecyclerViewUI()
+        setupRecommendationRecyclerViewUI()
+        setupHistoryRecyclerViewUI()
     }
 
     private fun setupArtistRecyclerViewUI() {
@@ -101,15 +102,15 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateArtistRecyclerView(artworks: List<Artwork>) {
-        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(artworks)
+        binding.horizontalRecyclerView.adapter = ArtistRecyclerViewAdapter(artworks, this)
     }
 
     private fun updateRecommendationRecyclerView(artworks: List<Artwork>) {
-        binding.recommendedRecyclerView.adapter = RecommendationRecyclerViewAdapter(artworks)
+        binding.recommendedRecyclerView.adapter = RecommendationRecyclerViewAdapter(artworks, this)
     }
 
     private fun updateHistoryRecyclerView(artworks: List<Artwork>) {
-        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(artworks)
+        binding.historyRecyclerView.adapter = HistoryRecyclerViewAdapter(artworks, this)
     }
 
     private fun initSearchInput() {
@@ -135,17 +136,14 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
-    private fun RecyclerView.setupRecyclerView(
-        adapter: RecyclerView.Adapter<*>,
-        layoutManager: RecyclerView.LayoutManager,
-        itemDecoration: RecyclerView.ItemDecoration? = null,
-        onScrollListener: RecyclerView.OnScrollListener? = null,
-        snapHelper: SnapHelper? = null
-    ) {
-        this.adapter = adapter
-        this.layoutManager = layoutManager
-        itemDecoration?.let { addItemDecoration(it) }
-        onScrollListener?.let { addOnScrollListener(it) }
-        snapHelper?.let { it.attachToRecyclerView(this) }
+    override fun onArtworkClick(artwork: Artwork) {
+        val bottomSheetFragment = ArtworkBottomSheetFragment.newInstance(
+            artwork.title,
+            artwork.author,
+            artwork.description,
+            artwork.funFact,
+            artwork.imageURL
+        )
+        bottomSheetFragment.show(childFragmentManager, "ArtworkBottomSheetTag")
     }
 }

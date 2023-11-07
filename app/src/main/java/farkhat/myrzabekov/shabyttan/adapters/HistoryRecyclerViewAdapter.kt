@@ -8,7 +8,7 @@ import farkhat.myrzabekov.shabyttan.databinding.ItemHistoryBinding
 import com.bumptech.glide.Glide
 import farkhat.myrzabekov.shabyttan.R
 
-class HistoryRecyclerViewAdapter(private val artworks: List<Artwork>) :
+class HistoryRecyclerViewAdapter(private val artworks: List<Artwork>, private val listener: OnArtworkClickListener) :
     RecyclerView.Adapter<HistoryRecyclerViewAdapter.PaintingViewHolder>() {
 
     inner class PaintingViewHolder(private val binding: ItemHistoryBinding) :
@@ -23,6 +23,9 @@ class HistoryRecyclerViewAdapter(private val artworks: List<Artwork>) :
                     .load(artwork.imageURL)
                     .placeholder(R.drawable.placeholder_image)
                     .into(imageViewHistory)
+                binding.root.setOnClickListener {
+                    listener.onArtworkClick(artwork)
+                }
             }
         }
     }
