@@ -22,6 +22,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
     private val viewModel: FirestoreViewModel by viewModels()
 
     companion object {
+        private const val ARG_ID = "argId"
         private const val ARG_TITLE = "argTitle"
         private const val ARG_AUTHOR = "argAuthor"
         private const val ARG_DESCRIPTION = "argDescription"
@@ -29,6 +30,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
         private const val ARG_IMAGE_URL = "argImageUrl"
 
         fun newInstance(
+            id: Long?,
             title: String?,
             author: String?,
             description: String?,
@@ -36,6 +38,9 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
             imageUrl: String?
         ) = ArtworkBottomSheetFragment().apply {
             arguments = Bundle().apply {
+                if (id != null) {
+                    putLong(ARG_ID, id)
+                }
                 putString(ARG_TITLE, title)
                 putString(ARG_AUTHOR, author)
                 putString(ARG_DESCRIPTION, description)
@@ -57,6 +62,12 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
                 // You could disable the like button until an artwork is loaded
                 // or prompt the user to log in.
             }
+        }
+    }
+
+    private fun setupShareButton() {
+        binding.shareActionButton.setOnClickListener {
+            uiHelper.shareArtworkDeepLink("https://farkhat.myrzabekov.shabyttan/artwork/${currentArtwork?.id}")
         }
     }
 
@@ -83,6 +94,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         // Extract the artwork information from the fragment's arguments
+        val id = arguments?.getLong(ARG_ID)
         val title = arguments?.getString(ARG_TITLE)
         val author = arguments?.getString(ARG_AUTHOR)
         val description = arguments?.getString(ARG_DESCRIPTION)
@@ -91,6 +103,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
 
         // Construct the currentArtwork from the arguments
         currentArtwork = Artwork(
+            id = id,
             title = title.orEmpty(),
             author = author.orEmpty(),
             description = description.orEmpty(),
@@ -102,6 +115,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
         updateUI(title, author, description, funFact, imageUrl)
 
         setupLikeButton()
+        setupShareButton()
     }
 
     private fun initializeUI() {

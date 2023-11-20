@@ -50,6 +50,7 @@ class ProfileFragment : Fragment(), OnArtworkClickListener {
 
     override fun onArtworkClick(artwork: Artwork) {
         val bottomSheetFragment = ArtworkBottomSheetFragment.newInstance(
+            artwork.id,
             artwork.title,
             artwork.author,
             artwork.description,

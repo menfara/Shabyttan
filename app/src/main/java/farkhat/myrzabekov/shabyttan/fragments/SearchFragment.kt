@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import farkhat.myrzabekov.shabyttan.adapters.ArtistRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.adapters.RecommendationRecyclerViewAdapter
@@ -30,6 +31,13 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
     private val binding get() = _binding!!
     private val viewModel: FirestoreViewModel by viewModels()
 
+
+    private var artworkId: Long? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        artworkId = arguments?.getString("artworkId")?.toLong()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +46,12 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
 
 
         loadPlaceholders()
+
+        artworkId?.let {
+            viewModel.fetchArtworkById(it)
+            viewModel.deeplinkArtworkLiveData.observe(viewLifecycleOwner, ::onArtworkClick)
+        }
+
 
 
         viewModel.fetchArtworksForLastThreeDays()
@@ -138,6 +152,7 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
 
     override fun onArtworkClick(artwork: Artwork) {
         val bottomSheetFragment = ArtworkBottomSheetFragment.newInstance(
+            artwork.id,
             artwork.title,
             artwork.author,
             artwork.description,

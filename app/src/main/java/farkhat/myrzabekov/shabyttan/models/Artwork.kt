@@ -1,7 +1,7 @@
 package farkhat.myrzabekov.shabyttan.models
 
 data class Artwork(
-    var id: Int? = null,
+    var id: Long? = null,
     val author: String? = null,
     val description: String? = null,
     val funFact: String? = null,

@@ -59,7 +59,7 @@ data class Data(
 
 fun Data.toArtwork(): Artwork {
     return Artwork(
-        id = this.athena_id,
+        id = this.athena_id.toLong(),
         author = this.creators.firstOrNull()?.description,
         description = this.description,
         funFact = this.fun_fact,

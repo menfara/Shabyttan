@@ -1,5 +1,6 @@
 package farkhat.myrzabekov.shabyttan.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,11 +14,13 @@ class HistoryRecyclerViewAdapter(private val artworks: List<Artwork>, private va
 
     inner class PaintingViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(artwork: Artwork) {
             binding.apply {
                 title.text = artwork.title
                 author.text = artwork.author
-                date.text = artwork.date
+                if (author.text.isBlank()) author.text = itemView.context.getString(R.string.author_unknown)
+//                date.text = artwork.date
 
                 Glide.with(imageViewHistory.context)
                     .load(artwork.imageURL)

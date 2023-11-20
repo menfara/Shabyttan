@@ -3,12 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <farkhat.myrzabekov.shabyttan.customviews.ZoomableImageView
         android:id="@+id/fullscreen_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:scaleType="matrix"
         android:src="@drawable/img_hero"
         android:background="#000" />
-
 </FrameLayout>

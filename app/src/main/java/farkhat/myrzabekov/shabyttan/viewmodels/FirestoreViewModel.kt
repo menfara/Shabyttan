@@ -27,12 +27,15 @@ class FirestoreViewModel : ViewModel() {
     private val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale(LOCALE_LANGUAGE, LOCALE_COUNTRY))
     val userLikedArtworksLiveData = MutableLiveData<List<Artwork>>()
 
+    val deeplinkArtworkLiveData = MutableLiveData<Artwork>()
+
+
 
     private var cachedRandomArtworks: List<Artwork>? = null
 
-    fun fetchArtworkById(id: String = "pTqDvyL326VJL2miVyp7") {
+    fun fetchArtworkById(id: Long) {
         firestoreRepository.getArtworkById(id) { artwork ->
-            artworkLiveData.postValue(artwork)
+            deeplinkArtworkLiveData.postValue(artwork)
         }
     }
 

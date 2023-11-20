@@ -1,11 +1,13 @@
 package farkhat.myrzabekov.shabyttan.fragments
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -73,24 +75,17 @@ class UIHelper(private val fragment: Fragment) {
             dialogBinding.fullscreenImage.apply {
                 setImageDrawable(drawable)
                 setOnClickListener { dismiss() }
-                adjustScaleType(this, drawable)
             }
+            dialogBinding.fullscreenImage.onTapListener = {
+                this.dismiss() // Закрываем диалог при тапе
+            }
+
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
         dialog.show()
-    }
-
-    private fun adjustScaleType(imageView: ImageView, drawable: Drawable?) {
-        drawable?.let {
-            if (it.intrinsicHeight < it.intrinsicWidth) {
-                imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-            } else {
-                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-            }
-        }
     }
 
     fun loadImage(imageView: ImageView, imageUrl: String?) {
@@ -112,5 +107,16 @@ class UIHelper(private val fragment: Fragment) {
 
     fun clearImage(imageView: ImageView) {
         Glide.with(fragment).clear(imageView)
+    }
+
+    fun shareArtworkDeepLink(artworkLink: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, artworkLink)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(fragment.requireContext(), shareIntent, null)
     }
 }

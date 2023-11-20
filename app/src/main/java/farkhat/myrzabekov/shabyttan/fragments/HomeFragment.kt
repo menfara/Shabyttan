@@ -1,5 +1,6 @@
 package farkhat.myrzabekov.shabyttan.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.firebase.auth.FirebaseAuth
+import farkhat.myrzabekov.shabyttan.R
 import farkhat.myrzabekov.shabyttan.databinding.DialogFullScreenImageBinding
 import farkhat.myrzabekov.shabyttan.databinding.FragmentHomeBinding
 import farkhat.myrzabekov.shabyttan.models.Artwork
@@ -32,6 +34,7 @@ class HomeFragment : Fragment() {
         setupObservers()
 
         setupLikeButton()
+        setupShareButton()
 
         return binding.root
     }
@@ -48,6 +51,12 @@ class HomeFragment : Fragment() {
                 // You could disable the like button until an artwork is loaded
                 // or prompt the user to log in.
             }
+        }
+    }
+
+    private fun setupShareButton() {
+        binding.shareActionButton.setOnClickListener {
+            uiHelper.shareArtworkDeepLink("https://farkhat.myrzabekov.shabyttan/artwork/${currentArtwork?.id}")
         }
     }
 
@@ -86,6 +95,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUI(
         title: String?,
         author: String?,
@@ -100,6 +110,8 @@ class HomeFragment : Fragment() {
             artFunFact.text = funFact
             uiHelper.loadImage(artImage, imageUrl)
             removePlaceholders()
+
+            if (artAuthor.text.isBlank()) artAuthor.text = requireActivity().getString(R.string.author_unknown)
         }
     }
 

@@ -72,6 +72,7 @@ class FirestoreRepository {
     fun addArtwork(artwork: Artwork) {
         db.collection("Artworks").add(artwork)
     }
+
     private fun addArtwork(artwork: Artwork, completion: (Boolean) -> Unit) {
         db.collection("Artworks").add(artwork)
             .addOnSuccessListener {
@@ -84,11 +85,25 @@ class FirestoreRepository {
     }
 
 
-    fun getArtworkById(documentId: String, callback: (Artwork?) -> Unit) {
-        db.collection("Artworks").document(documentId).get().addOnSuccessListener { document ->
-            callback(document.toObject(Artwork::class.java))
-        }
+    fun getArtworkById(artworkId: Long, callback: (Artwork?) -> Unit) {
+        db.collection("Artworks")
+            .whereEqualTo("id", artworkId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+
+                    val artwork = documents.documents.first().toObject(Artwork::class.java)
+                    callback(artwork)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
     }
+
+
 
     fun getArtworkByDate(date: String, callback: (Artwork?) -> Unit) {
         db.collection("Artworks")
@@ -100,7 +115,7 @@ class FirestoreRepository {
                     val artwork = querySnapshot.documents[0].toObject(Artwork::class.java)
                     callback(artwork)
                 } else {
-                    getArtworkBySkip() { data, code ->
+                    getArtworkBySkip { data, _ ->
                         if (data != null) {
                             val newArtwork = data.toArtwork().copy(date = date)
                             addArtwork(newArtwork) { callback(newArtwork) }
@@ -133,35 +148,6 @@ class FirestoreRepository {
                     callback(null, -1)
                 }
             }
-        }
-    }
-
-    fun incrementArtworkLikes(documentId: String) {
-        db.collection("Artworks").document(documentId).update("likesCount", FieldValue.increment(1))
-    }
-
-    fun deleteArtworkById(documentId: String) {
-        db.collection("Artworks").document(documentId).delete()
-    }
-
-
-    fun addUser(user: User) {
-        db.collection("Users").document(user.userId!!).set(user)
-    }
-
-    fun likeArtworkForUser(userId: String, artworkId: String) {
-        db.collection("Users").document(userId)
-            .update("likedArtworks", FieldValue.arrayUnion(artworkId))
-    }
-
-    fun unlikeArtworkForUser(userId: String, artworkId: String) {
-        db.collection("Users").document(userId)
-            .update("likedArtworks", FieldValue.arrayRemove(artworkId))
-    }
-
-    fun getUserLikedArtworks(userId: String, callback: (User?) -> Unit) {
-        db.collection("Users").document(userId).get().addOnSuccessListener { document ->
-            callback(document.toObject(User::class.java))
         }
     }
 
