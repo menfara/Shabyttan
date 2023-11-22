@@ -126,7 +126,7 @@
         app:fabCustomSize="50dp"
         app:layout_anchor="@id/nested_scroll_view"
         app:layout_anchorGravity="top|end"
-        app:tint="@android:color/white" />
+        app:tint="@color/action_button_tint" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/share_action_button"
@@ -138,7 +138,7 @@
         app:fabCustomSize="50dp"
         app:layout_anchor="@id/nested_scroll_view"
         app:layout_anchorGravity="top|end"
-        app:tint="@android:color/white" />
+        app:tint="@color/action_button_tint" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/to_top_action_button"

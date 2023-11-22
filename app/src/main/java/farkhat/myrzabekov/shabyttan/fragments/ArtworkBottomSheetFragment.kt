@@ -1,14 +1,18 @@
 package farkhat.myrzabekov.shabyttan.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
+import farkhat.myrzabekov.shabyttan.R
 import farkhat.myrzabekov.shabyttan.databinding.DialogFullScreenImageBinding
 import farkhat.myrzabekov.shabyttan.databinding.FragmentArtworkBottomSheetBinding
 import farkhat.myrzabekov.shabyttan.models.Artwork
@@ -20,6 +24,7 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
     private val uiHelper by lazy { UIHelper(this) }
     private var currentArtwork: Artwork? = null
     private val viewModel: FirestoreViewModel by viewModels()
+    private var isArtworkLiked = false
 
     companion object {
         private const val ARG_ID = "argId"
@@ -54,8 +59,28 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
         binding.likeActionButton.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
             val artwork = getCurrentArtwork()
-            if (user != null && artwork != null) {
+            if (user != null) {
                 val userId = user.uid
+
+                isArtworkLiked = !isArtworkLiked
+
+                val heartRes: Int
+                if (isArtworkLiked) {
+                    heartRes = R.drawable.ic_red_heart
+                    ImageViewCompat.setImageTintList(binding.likeActionButton, null)
+                } else {
+                    heartRes = R.drawable.ic_heart
+                    val colorStateList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.white
+                        )
+                    )
+                    ImageViewCompat.setImageTintList(binding.likeActionButton, colorStateList)
+                }
+                binding.likeActionButton.setImageResource(heartRes)
+
+
                 viewModel.addArtworkToUserLikes(userId, artwork)
             } else {
                 // Handle case when user is not logged in or artwork is null
@@ -83,15 +108,17 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArtworkBottomSheetBinding.inflate(inflater, container, false)
+        viewModel.fetchUserLikedArtworks()
         initializeUI()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (dialog as? BottomSheetDialog)?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let { bottomSheet ->
-            BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
-        }
+        (dialog as? BottomSheetDialog)?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            ?.let { bottomSheet ->
+                BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
+            }
 
         // Extract the artwork information from the fragment's arguments
         val id = arguments?.getLong(ARG_ID)
@@ -129,7 +156,11 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
             DialogFullScreenImageBinding.inflate(layoutInflater)
         }
         uiHelper.setupScrollViewListener(binding.nestedScrollView, binding.toTopActionButton)
-        uiHelper.setupToTopButton(binding.toTopActionButton, binding.nestedScrollView, binding.appbar)
+        uiHelper.setupToTopButton(
+            binding.toTopActionButton,
+            binding.nestedScrollView,
+            binding.appbar
+        )
     }
 
     private fun updateUI(
@@ -145,6 +176,17 @@ class ArtworkBottomSheetFragment : BottomSheetDialogFragment() {
             artDescription.text = description.orEmpty()
             artFunFact.text = funFact.orEmpty()
             imageUrl?.let { uiHelper.loadImage(artImage, it) }
+
+            if (artAuthor.text.isBlank()) artAuthor.text =
+                requireActivity().getString(R.string.author_unknown)
+        }
+
+        viewModel.userLikedArtworksLiveData.observe(viewLifecycleOwner) { likedArtworks ->
+            isArtworkLiked = likedArtworks.any { art -> art.id == currentArtwork?.id }
+            if (isArtworkLiked) {
+                binding.likeActionButton.setImageResource(R.drawable.ic_red_heart)
+                ImageViewCompat.setImageTintList(binding.likeActionButton, null)
+            }
         }
     }
 

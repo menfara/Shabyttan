@@ -83,10 +83,6 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 
-
-
-
-
     // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
@@ -99,12 +95,11 @@ dependencies {
     // Firebase Auth
     implementation("com.google.firebase:firebase-auth-ktx")
 
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
     // Google Play Services Auth for Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
-
-
-
 
 
     // Viewpager2
@@ -112,8 +107,6 @@ dependencies {
 
     // lottie animations
     implementation("com.airbnb.android:lottie:6.1.0")
-
-
 
 
 }

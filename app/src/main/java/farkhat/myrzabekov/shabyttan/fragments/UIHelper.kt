@@ -22,12 +22,12 @@ class UIHelper(private val fragment: Fragment) {
 
 
     fun setupAppBarListener(appBarLayout: AppBarLayout, imageView: ImageView, vararg additionalViews: View) {
-        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+        appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
             val isCollapsed = abs(verticalOffset) - appBarLayout.totalScrollRange == 0
             val visibility = if (isCollapsed) View.INVISIBLE else View.VISIBLE
             imageView.visibility = visibility
             additionalViews.forEach { it.visibility = visibility }
-        })
+        }
     }
 
     fun setupToTopButton(toTopActionButton: View, scrollView: NestedScrollView, appBarLayout: AppBarLayout) {
@@ -77,7 +77,7 @@ class UIHelper(private val fragment: Fragment) {
                 setOnClickListener { dismiss() }
             }
             dialogBinding.fullscreenImage.onTapListener = {
-                this.dismiss() // Закрываем диалог при тапе
+                this.dismiss()
             }
 
             window?.setLayout(

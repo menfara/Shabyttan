@@ -1,11 +1,10 @@
 package farkhat.myrzabekov.shabyttan.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import farkhat.myrzabekov.shabyttan.models.Artwork
-import farkhat.myrzabekov.shabyttan.repositories.ArtworksRepository
 import farkhat.myrzabekov.shabyttan.repositories.FirestoreRepository
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,7 +27,6 @@ class FirestoreViewModel : ViewModel() {
     val userLikedArtworksLiveData = MutableLiveData<List<Artwork>>()
 
     val deeplinkArtworkLiveData = MutableLiveData<Artwork>()
-
 
 
     private var cachedRandomArtworks: List<Artwork>? = null
@@ -72,11 +70,6 @@ class FirestoreViewModel : ViewModel() {
         return Date(date.time - days * 24 * 60 * 60 * 1000)
     }
 
-    private fun getFixedDate(): Date {
-        val fixedDate = "31/10/2023"
-        return dateFormat.parse(fixedDate)!!
-    }
-
     fun fetchRandomArtworks() {
         cachedRandomArtworks?.let {
             if (it.isNotEmpty()) {
@@ -94,33 +87,39 @@ class FirestoreViewModel : ViewModel() {
     fun addArtworkToUserLikes(userId: String, artwork: Artwork) {
         val db = FirebaseFirestore.getInstance()
         val userLikesRef = db.collection("Users").document(userId).collection("liked_artworks")
-        userLikesRef.add(artwork)
-            .addOnSuccessListener {
-                // Handle success (e.g., show a toast message that the artwork was liked)
+
+        userLikesRef.whereEqualTo("id", artwork.id).limit(1).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    userLikesRef.add(artwork)
+                        .addOnSuccessListener {
+                            Log.d("ArtworkLikes", "Artwork liked successfully.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("ArtworkLikes", "Failed to like artwork: ${e.message}")
+                        }
+                } else {
+                    for (document in documents) {
+                        userLikesRef.document(document.id).delete()
+                            .addOnSuccessListener {
+                                Log.d("ArtworkLikes", "Artwork unliked successfully.")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("ArtworkLikes", "Failed to unlike artwork: ${e.message}")
+                            }
+                    }
+                }
             }
-            .addOnFailureListener {
-                // Handle error (e.g., show a toast message with the error)
+            .addOnFailureListener { e ->
+                Log.e("ArtworkLikes", "Error checking liked artworks: ${e.message}")
             }
     }
 
     fun fetchUserLikedArtworks() {
-        val user = FirebaseAuth.getInstance().currentUser
-
-        user?.let {
-            val db = FirebaseFirestore.getInstance()
-            val userLikedArtworksRef =
-                db.collection("Users").document(user.uid).collection("liked_artworks")
-
-            userLikedArtworksRef.get().addOnSuccessListener { documents ->
-                val likedArtworks = documents.mapNotNull { it.toObject(Artwork::class.java) }
-                userLikedArtworksLiveData.postValue(likedArtworks) // Save the liked artworks in LiveData
-            }.addOnFailureListener {
-                // Handle any errors here
-            }
-        } ?: run {
-            userLikedArtworksLiveData.postValue(emptyList())
+        firestoreRepository.fetchUserLikedArtworks { artworks ->
+            userLikedArtworksLiveData.postValue(artworks)
         }
-
     }
+
 
 }

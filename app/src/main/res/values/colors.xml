@@ -2,14 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_color">#EAEAEA</color>
-    <color name="ic_color_checked">#767676</color>
-    <color name="ic_bg_color_checked">#1A1A1A</color>
-    <color name="ic_bg_color">#2C2C2C</color>
-    <color name="art_container_color">#141414</color>
-    <color name="art_title">#E7E7E7</color>
-    <color name="art_author">#939393</color>
-    <color name="action_button">#D9232323</color>
-    <color name="fragment_search_bg">#141414</color>
-    <color name="title">#FFF</color>
+    <color name="ic_color">#000000</color>
+    <color name="ic_color_checked">#D6D6D6</color>
+    <color name="ic_bg_color_checked">#3A3A3A</color>
+    <color name="ic_bg_color">#AAAAAA</color>
+    <color name="art_container_color">#FFFFFF</color>
+    <color name="art_title">#000000</color>
+    <color name="art_author">#454545</color>
+    <color name="action_button">#D9FFFFFF</color>
+    <color name="fragment_search_bg">#ECECEC</color>
+    <color name="title">#171717</color>
+    <color name="sign_in_bg">#fff</color>
+    <color name="app_name">#232323</color>
+    <color name="button_bg">#232323</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="action_button_tint">#202020</color>
+    <color name="item_history_bg">#CCCCCC</color>
+    <color name="item_history_text">#2B2B2B</color>
+    <color name="input_text">#000000</color>
+    <color name="bottom_nav_bg">#FFFFFF</color>
 </resources>

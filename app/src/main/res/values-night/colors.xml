@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sign_in_bg">@color/fragment_search_bg</color>
+    <color name="app_name">#FFFFFF</color>
+    <color name="button_bg">#FFFFFF</color>
+    <color name="button_text">#000</color>
+    <color name="art_container_color">#141414</color>
+    <color name="art_title">#E7E7E7</color>
+    <color name="art_author">#939393</color>
+    <color name="action_button">#D9232323</color>
+    <color name="action_button_tint">#fff</color>
+    <color name="fragment_search_bg">#141414</color>
+    <color name="title">#FFF</color>
+    <color name="item_history_bg">#2C2C2C</color>
+    <color name="item_history_text">#D1D1D1</color>
+    <color name="input_text">#FFF</color>
+    <color name="ic_color">#EAEAEA</color>
+    <color name="ic_color_checked">#767676</color>
+    <color name="ic_bg_color_checked">#1A1A1A</color>
+    <color name="ic_bg_color">#2C2C2C</color>
+</resources>

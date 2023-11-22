@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
     android:background="@color/fragment_search_bg"
     tools:context=".fragments.ArtworkBottomSheetFragment">
-
 
 
     <ImageView
@@ -126,7 +125,7 @@
         app:fabCustomSize="50dp"
         app:layout_anchor="@id/nested_scroll_view"
         app:layout_anchorGravity="top|end"
-        app:tint="@android:color/white" />
+        app:tint="@color/action_button_tint" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/share_action_button"
@@ -138,7 +137,7 @@
         app:fabCustomSize="50dp"
         app:layout_anchor="@id/nested_scroll_view"
         app:layout_anchorGravity="top|end"
-        app:tint="@android:color/white" />
+        app:tint="@color/action_button_tint" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/to_top_action_button"

@@ -1,7 +1,7 @@
 package farkhat.myrzabekov.shabyttan.repositories
 
 import android.util.Log
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import farkhat.myrzabekov.shabyttan.api.ApiInterface
 import farkhat.myrzabekov.shabyttan.api.ApiUtilities
@@ -12,25 +12,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import kotlin.random.Random
 
 class FirestoreRepository {
 
-    companion object {
-        private const val ARTWORKS_COLLECTION = "Artworks"
-        private const val USERS_COLLECTION = "Users"
-        private const val AUTHOR_FIELD = "author"
-        private const val LIKES_COUNT_FIELD = "likesCount"
-        private const val LIKED_ARTWORKS_FIELD = "likedArtworks"
-        private const val DATE_FIELD = "date"
-    }
-
     private val db = FirebaseFirestore.getInstance()
-
-    data class User(
-        val userId: String? = null,
-        val likedArtworks: List<String> = listOf()
-    )
 
 
     // ARTWORKS COLLECTION METHODS
@@ -41,7 +28,8 @@ class FirestoreRepository {
             .limit(4)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                val artworks = querySnapshot.documents.map { it.toObject(Artwork::class.java) }
+                val artworks =
+                    querySnapshot.documents.map { adjustArtworkForLocale(it.toObject(Artwork::class.java)) }
                 callback(artworks)
             }
             .addOnFailureListener { exception ->
@@ -62,16 +50,18 @@ class FirestoreRepository {
 
         db.collection("Artworks").get().addOnSuccessListener { querySnapshot ->
             val randomArtworks =
-                randomIndices.map { querySnapshot.documents[it].toObject(Artwork::class.java) }
+                randomIndices.map {
+                    adjustArtworkForLocale(
+                        querySnapshot.documents[it].toObject(
+                            Artwork::class.java
+                        )
+                    )
+                }
             callback(randomArtworks)
         }
 
     }
 
-
-    fun addArtwork(artwork: Artwork) {
-        db.collection("Artworks").add(artwork)
-    }
 
     private fun addArtwork(artwork: Artwork, completion: (Boolean) -> Unit) {
         db.collection("Artworks").add(artwork)
@@ -93,7 +83,7 @@ class FirestoreRepository {
                 if (!documents.isEmpty) {
 
                     val artwork = documents.documents.first().toObject(Artwork::class.java)
-                    callback(artwork)
+                    callback(adjustArtworkForLocale(artwork))
                 } else {
                     callback(null)
                 }
@@ -104,7 +94,6 @@ class FirestoreRepository {
     }
 
 
-
     fun getArtworkByDate(date: String, callback: (Artwork?) -> Unit) {
         db.collection("Artworks")
             .whereEqualTo("date", date)
@@ -113,7 +102,7 @@ class FirestoreRepository {
             .addOnSuccessListener { querySnapshot ->
                 if (!querySnapshot.isEmpty) {
                     val artwork = querySnapshot.documents[0].toObject(Artwork::class.java)
-                    callback(artwork)
+                    callback(adjustArtworkForLocale(artwork))
                 } else {
                     getArtworkBySkip { data, _ ->
                         if (data != null) {
@@ -132,7 +121,7 @@ class FirestoreRepository {
         CoroutineScope(Dispatchers.IO).launch {
             try {
 
-                val response = apiInterface.getArtworkBySkip(Random.nextInt(1, 1001))
+                val response = apiInterface.getArtworkBySkip(Random.nextInt(1, 65000))
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         val data = response.body()?.data?.firstOrNull()
@@ -148,6 +137,40 @@ class FirestoreRepository {
                     callback(null, -1)
                 }
             }
+        }
+    }
+
+    fun fetchUserLikedArtworks(callback: (List<Artwork>) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        user?.let {
+            val userLikedArtworksRef = db.collection("Users").document(user.uid).collection("liked_artworks")
+
+            userLikedArtworksRef.get().addOnSuccessListener { documents ->
+                val likedArtworks = documents.mapNotNull { it.toObject(Artwork::class.java) }
+                callback(likedArtworks)
+            }.addOnFailureListener {
+                callback(emptyList())
+            }
+        } ?: run {
+            callback(emptyList())
+        }
+    }
+    private fun adjustArtworkForLocale(artwork: Artwork?): Artwork? {
+        val isRussian = Locale.getDefault().language.equals("ru", ignoreCase = true)
+        return if (isRussian && artwork != null) {
+            Artwork(
+                id = artwork.id,
+                author = artwork.author_ru ?: artwork.author,
+                description = artwork.description_ru ?: artwork.description,
+                funFact = artwork.funFact_ru ?: artwork.funFact,
+                imageURL = artwork.imageURL,
+                title = artwork.title_ru ?: artwork.title,
+                date = artwork.date,
+                likesCount = artwork.likesCount
+            )
+        } else {
+            artwork
         }
     }
 

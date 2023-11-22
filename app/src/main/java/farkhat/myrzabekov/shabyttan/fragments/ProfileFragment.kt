@@ -1,5 +1,6 @@
 package farkhat.myrzabekov.shabyttan.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import farkhat.myrzabekov.shabyttan.R
+import com.google.firebase.auth.FirebaseAuth
+import farkhat.myrzabekov.shabyttan.SignInActivity
 import farkhat.myrzabekov.shabyttan.adapters.HistoryRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.adapters.OnArtworkClickListener
 import farkhat.myrzabekov.shabyttan.databinding.FragmentProfileBinding
-import farkhat.myrzabekov.shabyttan.databinding.FragmentSearchBinding
 import farkhat.myrzabekov.shabyttan.models.Artwork
 import farkhat.myrzabekov.shabyttan.viewmodels.FirestoreViewModel
 
@@ -35,6 +36,16 @@ class ProfileFragment : Fragment(), OnArtworkClickListener {
         viewModel.fetchUserLikedArtworks()
 
         viewModel.userLikedArtworksLiveData.observe(viewLifecycleOwner, ::updateHistoryRecyclerView)
+
+        binding.logoutImageView.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+
+            val intent = Intent(requireContext(), SignInActivity::class.java)
+            startActivity(intent)
+
+            activity?.finish()
+        }
+
         return binding.root
     }
 

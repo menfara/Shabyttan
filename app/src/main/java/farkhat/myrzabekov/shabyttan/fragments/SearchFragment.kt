@@ -2,26 +2,23 @@ package farkhat.myrzabekov.shabyttan.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.SnapHelper
 import farkhat.myrzabekov.shabyttan.adapters.ArtistRecyclerViewAdapter
-import farkhat.myrzabekov.shabyttan.adapters.RecommendationRecyclerViewAdapter
-import farkhat.myrzabekov.shabyttan.decorations.PageIndicator
-import farkhat.myrzabekov.shabyttan.decorations.HorizontalSpaceItemDecoration
-import farkhat.myrzabekov.shabyttan.decorations.StartLinearSnapHelper
-import farkhat.myrzabekov.shabyttan.decorations.dp
 import farkhat.myrzabekov.shabyttan.adapters.HistoryRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.adapters.OnArtworkClickListener
+import farkhat.myrzabekov.shabyttan.adapters.RecommendationRecyclerViewAdapter
 import farkhat.myrzabekov.shabyttan.databinding.FragmentSearchBinding
+import farkhat.myrzabekov.shabyttan.decorations.HorizontalSpaceItemDecoration
+import farkhat.myrzabekov.shabyttan.decorations.PageIndicator
+import farkhat.myrzabekov.shabyttan.decorations.StartLinearSnapHelper
+import farkhat.myrzabekov.shabyttan.decorations.dp
 import farkhat.myrzabekov.shabyttan.models.Artwork
 import farkhat.myrzabekov.shabyttan.viewmodels.FirestoreViewModel
 
@@ -31,13 +28,13 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
     private val binding get() = _binding!!
     private val viewModel: FirestoreViewModel by viewModels()
 
-
     private var artworkId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         artworkId = arguments?.getString("artworkId")?.toLong()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,8 +45,8 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
         loadPlaceholders()
 
         artworkId?.let {
-            viewModel.fetchArtworkById(it)
-            viewModel.deeplinkArtworkLiveData.observe(viewLifecycleOwner, ::onArtworkClick)
+//            viewModel.fetchArtworkById(it)
+//            viewModel.deeplinkArtworkLiveData.observe(viewLifecycleOwner, ::onArtworkClick)
         }
 
 
@@ -68,6 +65,21 @@ class SearchFragment : Fragment(), OnArtworkClickListener {
 
 
         initSearchInput()
+
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w(">>> TAG", "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//
+//            Log.d(">>> TAG", token)
+//
+//            binding.textInputSearch.setText(token)
+//        })
 
         return binding.root
     }
